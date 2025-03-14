@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import com.condation.cms.api.extensions.RegisterTemplateComponentExtensionPoint;
+import com.condation.cms.api.feature.features.ContentNodeMapperFeature;
 import com.condation.cms.api.model.ListNode;
 import com.condation.cms.api.model.Parameter;
 import com.condation.modules.api.annotation.Extension;
@@ -36,6 +37,12 @@ public class TemplateComponentExtension extends RegisterTemplateComponentExtensi
 
     @Override
 	public Map<String, Function<Parameter, String>> components() {
+		if (getRequestContext() == null 
+				|| !getRequestContext().has(ContentNodeMapperFeature.class)) {
+			return Map.of(
+					"recommendations", (params) -> ""
+			);
+		}
 		return Map.of(
             "recommendations", this::recommendations
         );

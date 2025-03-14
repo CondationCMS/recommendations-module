@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import com.condation.cms.api.extensions.RegisterShortCodesExtensionPoint;
+import com.condation.cms.api.feature.features.ContentNodeMapperFeature;
 import com.condation.cms.api.model.ListNode;
 import com.condation.cms.api.model.Parameter;
 import com.condation.modules.api.annotation.Extension;
@@ -36,6 +37,12 @@ public class ShortCodesExtension extends RegisterShortCodesExtensionPoint {
 	@Override
 	public Map<String, Function<Parameter, String>> shortCodes() {
 
+		if (getRequestContext() == null
+				|| !getRequestContext().has(ContentNodeMapperFeature.class)) {
+			return Map.of(
+					"recommendations", (params) -> ""
+			);
+		}
 		return Map.of(
 				"recommendations", this::recommendations
 		);
@@ -51,12 +58,12 @@ public class ShortCodesExtension extends RegisterShortCodesExtensionPoint {
 								"items", getRecommendations(params)
 						), getRequestContext());
 	}
-	
-	private List<ListNode> getRecommendations (Parameter params) {
+
+	private List<ListNode> getRecommendations(Parameter params) {
 		return LifecycleExtension.SIMPLE_RECOMMENDATION.newest(
-										(String) params.get("start"),
-										(int) params.getOrDefault("size", 5), 
-										getRequestContext());
-		
+				(String) params.get("start"),
+				(int) params.getOrDefault("size", 5),
+				getRequestContext());
+
 	}
 }
