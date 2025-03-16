@@ -2,9 +2,9 @@ package com.condation.cms.modules.recommendations.extensions;
 
 /*-
  * #%L
- * components-module
+ * recommendations-module
  * %%
- * Copyright (C) 2024 CondationCMS
+ * Copyright (C) 2025 CondationCMS
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -22,13 +22,24 @@ package com.condation.cms.modules.recommendations.extensions;
  * #L%
  */
 
+
+import com.condation.cms.api.db.DB;
+import com.condation.cms.api.eventbus.events.ContentChangedEvent;
+import com.condation.cms.api.eventbus.events.TemplateChangedEvent;
 import com.condation.cms.api.feature.features.DBFeature;
+import com.condation.cms.api.feature.features.EventBusFeature;
+import com.condation.cms.api.feature.features.SitePropertiesFeature;
 import com.condation.cms.api.module.CMSModuleContext;
 import com.condation.cms.api.module.CMSRequestContext;
 import com.condation.cms.modules.recommendations.RenderFunction;
+import com.condation.cms.modules.recommendations.SearchRecommendation;
 import com.condation.cms.modules.recommendations.SimpleRecommendation;
+import com.condation.cms.modules.recommendations.index.FileIndexingVisitor;
+import com.condation.cms.modules.recommendations.index.SearchEngine;
 import com.condation.modules.api.ModuleLifeCycleExtension;
 import com.condation.modules.api.annotation.Extension;
+import java.io.IOException;
+import java.nio.file.Files;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,17 +52,78 @@ import lombok.extern.slf4j.Slf4j;
 public class LifecycleExtension extends ModuleLifeCycleExtension<CMSModuleContext, CMSRequestContext> {
 
 	public static SimpleRecommendation SIMPLE_RECOMMENDATION;
+	public static SearchRecommendation SEARCH_RECOMMENDATION;
 	public static RenderFunction RENDER_FUNCTION;
+
+	public static SearchEngine searchEngine;
 
 	@Override
 	public void init() {
 
 	}
 
-	@Override
-	public void activate() {
-		SIMPLE_RECOMMENDATION = new SimpleRecommendation(getContext().get(DBFeature.class).db());
-		RENDER_FUNCTION = new RenderFunction(getContext());
+	private String getLanguage() {
+		String language = (String) getContext().get(SitePropertiesFeature.class).siteProperties().get("language");
+		if (language == null) {
+			language = "standard";
+		}
+		return language;
 	}
 
+	protected void reindexContext() {
+		var contentPath = getContext().get(DBFeature.class).db().getFileSystem().resolve("content");
+		try {
+			searchEngine.clear();
+			Files.walkFileTree(contentPath, new FileIndexingVisitor(
+					contentPath,
+					LifecycleExtension.searchEngine,
+					getContext()
+			));
+			searchEngine.commit();
+		} catch (IOException e) {
+			log.error(null, e);
+		}
+	}
+
+	@Override
+	public void activate() {
+		final DB db = getContext().get(DBFeature.class).db();
+		SIMPLE_RECOMMENDATION = new SimpleRecommendation(db);
+		RENDER_FUNCTION = new RenderFunction(getContext());
+		
+		searchEngine = new SearchEngine();
+		try {
+			searchEngine.open(
+					configuration.getDataDir().toPath().resolve("index"), 
+					getLanguage(),
+					getContext()
+			);
+
+			// stat reindexing
+			Thread.ofVirtual().start(() -> {
+				reindexContext();
+			});
+		} catch (IOException e) {
+			log.error("error opening serach engine", e);
+			throw new RuntimeException(e);
+		}
+		
+		getContext().get(EventBusFeature.class).eventBus().register(ContentChangedEvent.class, (event) -> {
+			reindexContext();
+		});
+		getContext().get(EventBusFeature.class).eventBus().register(TemplateChangedEvent.class, (event) -> {
+			reindexContext();
+		});
+		SEARCH_RECOMMENDATION = new SearchRecommendation(db, searchEngine);
+	}
+
+	@Override
+	public void deactivate() {
+		try {
+			searchEngine.close();
+		} catch (Exception e) {
+			log.error("error closing serach engine", e);
+			throw new RuntimeException(e);
+		}
+	}
 }

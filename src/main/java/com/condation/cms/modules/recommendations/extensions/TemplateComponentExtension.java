@@ -2,9 +2,9 @@ package com.condation.cms.modules.recommendations.extensions;
 
 /*-
  * #%L
- * components-module
+ * recommendations-module
  * %%
- * Copyright (C) 2024 CondationCMS
+ * Copyright (C) 2025 CondationCMS
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -21,6 +21,8 @@ package com.condation.cms.modules.recommendations.extensions;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
+
+
 
 import java.util.Map;
 import java.util.function.Function;

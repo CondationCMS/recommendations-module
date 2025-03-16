@@ -4,7 +4,7 @@ package com.condation.cms.modules.recommendations;
  * #%L
  * recommendations-module
  * %%
- * Copyright (C) 2024 - 2025 CondationCMS
+ * Copyright (C) 2025 CondationCMS
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -21,6 +21,8 @@ package com.condation.cms.modules.recommendations;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
+
+
 
 import com.condation.cms.api.feature.features.HookSystemFeature;
 import com.condation.cms.api.feature.features.IsDevModeFeature;

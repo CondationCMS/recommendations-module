@@ -33,7 +33,10 @@ import com.condation.cms.api.model.ListNode;
 import com.condation.cms.api.request.RequestContext;
 import com.condation.cms.api.utils.HTTPUtil;
 import com.condation.cms.api.utils.PathUtil;
+import com.condation.cms.modules.recommendations.index.SearchEngine;
+import com.condation.cms.modules.recommendations.index.SearchRequest;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiFunction;
 import lombok.RequiredArgsConstructor;
 
@@ -42,33 +45,33 @@ import lombok.RequiredArgsConstructor;
  * @author t.marx
  */
 @RequiredArgsConstructor
-public class SimpleRecommendation {
+public class SearchRecommendation {
 
 	private final DB db;
+	private final SearchEngine searchEngine;
 
-	public List<ListNode> newest(String start, int size, final RequestContext requestContext) {
+	public List<ListNode> query(String query, int size, final RequestContext requestContext) {
 
+		SearchRequest request = new SearchRequest(query, 1, size + 1);
+		
+		var result = searchEngine.search(request);
+		
 		BiFunction<ContentNode, Integer, ListNode> mapperFunction = (node, excerptLength) -> {
 			return requestContext.get(ContentNodeMapperFeature.class)
 					.contentNodeMapper()
 					.toListNode(node, requestContext, excerptLength);
 		};
 
-		ContentQuery<ListNode> query;
-		if (start != null) {
-			query = db.getContent().query(start, mapperFunction);
-		} else {
-			query = db.getContent().query(mapperFunction);
-		}
-
-		var page = query.where("template", "content.entry.html")
-				.orderby("publish_date")
-				.desc()
-				.page(1, size + 1);
-
-		var hits = page.getItems().stream()
+		var hits = result.getItems().stream()
+				.map(item -> db.getContent().byUri(item.uri.substring(1)+".md"))
+				.filter(Optional::isPresent)
+				.map(Optional::get)
+				.map(ContentNode.class::cast)
+				.map(node -> mapperFunction.apply(node, 120))
 				.filter(node -> filterCurrentNode(node, requestContext))
 				.toList();
+		
+		
 		return hits.subList(0, Math.min(size, hits.size()));
 	}
 

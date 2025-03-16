@@ -4,7 +4,7 @@
 	
 	<groupId>com.condation.cms.modules</groupId>
 	<artifactId>recommendations-module</artifactId>
-	<version>1.0.1</version>
+	<version>1.1.0</version>
 	<packaging>jar</packaging>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -16,8 +16,9 @@
 		<modules.version>1.0.0</modules.version>
 		<maven.compiler.source>21</maven.compiler.source>
 		<maven.compiler.target>21</maven.compiler.target>
+		<lucene.version>10.1.0</lucene.version>
 	</properties>
-	<inceptionYear>2024</inceptionYear>
+	<inceptionYear>2025</inceptionYear>
 	<organization>
 		<name>CondationCMS</name>
 		<url>https://condation.com</url>
@@ -47,6 +48,43 @@
 			<artifactId>guava</artifactId>
 			<version>33.4.0-jre</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-core</artifactId>
+			<version>${lucene.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-analysis-common</artifactId>
+			<version>${lucene.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-backward-codecs</artifactId>
+			<version>${lucene.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-facet</artifactId>
+			<version>${lucene.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-highlighter</artifactId>
+			<version>${lucene.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-queryparser</artifactId>
+			<version>${lucene.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.19.1</version>
+		</dependency>
+		
 		
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -136,5 +174,5 @@
 			</plugin>
 		</plugins>
 	</build>
-    <name>recommendations-module</name>
+	<name>recommendations-module</name>
 </project>

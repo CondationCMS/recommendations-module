@@ -2,9 +2,9 @@ package com.condation.cms.modules.recommendations.extensions;
 
 /*-
  * #%L
- * components-module
+ * recommendations-module
  * %%
- * Copyright (C) 2024 CondationCMS
+ * Copyright (C) 2025 CondationCMS
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -21,19 +21,22 @@ package com.condation.cms.modules.recommendations.extensions;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
+
+
 import java.util.Map;
 import java.util.function.Function;
 
 import com.condation.cms.api.extensions.RegisterShortCodesExtensionPoint;
 import com.condation.cms.api.feature.features.ContentNodeMapperFeature;
-import com.condation.cms.api.model.ListNode;
 import com.condation.cms.api.model.Parameter;
+import com.condation.cms.modules.recommendations.RecommendationHandler;
 import com.condation.modules.api.annotation.Extension;
-import java.util.List;
 
 @Extension(RegisterShortCodesExtensionPoint.class)
 public class ShortCodesExtension extends RegisterShortCodesExtensionPoint {
 
+	private static RecommendationHandler handler = new RecommendationHandler();
+	
 	@Override
 	public Map<String, Function<Parameter, String>> shortCodes() {
 
@@ -44,26 +47,7 @@ public class ShortCodesExtension extends RegisterShortCodesExtensionPoint {
 			);
 		}
 		return Map.of(
-				"recommendations", this::recommendations
+				"recommendations", (params) -> handler.handleRecommendations(params, getRequestContext())
 		);
-	}
-
-	private String recommendations(Parameter params) {
-
-		return LifecycleExtension.RENDER_FUNCTION
-				.render(
-						(String) params.get("template"),
-						Map.of(
-								"title", params.getOrDefault("title", ""),
-								"items", getRecommendations(params)
-						), getRequestContext());
-	}
-
-	private List<ListNode> getRecommendations(Parameter params) {
-		return LifecycleExtension.SIMPLE_RECOMMENDATION.newest(
-				(String) params.get("start"),
-				(int) params.getOrDefault("size", 5),
-				getRequestContext());
-
 	}
 }
