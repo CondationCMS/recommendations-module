@@ -16,7 +16,7 @@
 		<modules.version>1.2.0</modules.version>
 		<maven.compiler.source>21</maven.compiler.source>
 		<maven.compiler.target>21</maven.compiler.target>
-		<lucene.version>10.3.0</lucene.version>
+		<lucene.version>10.3.1</lucene.version>
 	</properties>
 	<inceptionYear>2025</inceptionYear>
 	<organization>
