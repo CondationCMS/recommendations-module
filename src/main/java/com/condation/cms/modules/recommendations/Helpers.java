@@ -26,13 +26,13 @@ package com.condation.cms.modules.recommendations;
 
 import com.condation.cms.api.configuration.configs.SiteConfiguration;
 import com.condation.cms.api.feature.features.ConfigurationFeature;
-import com.condation.cms.api.module.CMSModuleContext;
+import com.condation.cms.api.module.SiteModuleContext;
 
 public final class Helpers {
 
     private Helpers () {}
 
-    public static String getTemplateFileExtension (CMSModuleContext context) {
+    public static String getTemplateFileExtension (SiteModuleContext context) {
         var templateExtension = context.get(ConfigurationFeature.class).configuration()
                     .get(SiteConfiguration.class)
                     .siteProperties()

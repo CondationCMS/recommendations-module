@@ -24,7 +24,7 @@ package com.condation.cms.modules.recommendations.index;
 
 
 
-import com.condation.cms.api.module.CMSModuleContext;
+import com.condation.cms.api.module.SiteModuleContext;
 import com.google.common.base.Strings;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -39,7 +39,7 @@ public class SearchEngine implements AutoCloseable{
 
 	private SearchIndex searchIndex;
 	
-	public void open (Path path, String language, CMSModuleContext moduleContext) throws IOException {
+	public void open (Path path, String language, SiteModuleContext moduleContext) throws IOException {
 		
 		searchIndex = new SearchIndex(path, language, moduleContext);
 		searchIndex.open();

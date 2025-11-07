@@ -25,7 +25,7 @@ package com.condation.cms.modules.recommendations.index;
 
 import com.condation.cms.api.db.ContentNode;
 import com.condation.cms.api.feature.features.DBFeature;
-import com.condation.cms.api.module.CMSModuleContext;
+import com.condation.cms.api.module.SiteModuleContext;
 import com.google.common.base.Strings;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -120,7 +120,7 @@ public class SearchIndex {
 	private final Path path;
 	private final String language;
 
-	private final CMSModuleContext moduleContext;
+	private final SiteModuleContext moduleContext;
 
 	private Directory directory;
 	private IndexWriter writer = null;

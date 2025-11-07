@@ -26,7 +26,7 @@ package com.condation.cms.modules.recommendations;
 
 import com.condation.cms.api.model.ListNode;
 import com.condation.cms.api.model.Parameter;
-import com.condation.cms.api.module.CMSRequestContext;
+import com.condation.cms.api.module.SiteRequestContext;
 import com.condation.cms.modules.recommendations.extensions.LifecycleExtension;
 import java.util.Collection;
 import java.util.Collections;
@@ -39,7 +39,7 @@ import java.util.Map;
  */
 public class RecommendationHandler {
 
-	public String handleRecommendations(Parameter params, CMSRequestContext requestContext) {
+	public String handleRecommendations(Parameter params, SiteRequestContext requestContext) {
 		var type = (String)params.getOrDefault("type", "newest");
 		List<ListNode> items = switch (type) {
 			case "newest" -> newest(params, requestContext);
@@ -54,7 +54,7 @@ public class RecommendationHandler {
 		return renderRecommendations(params, items, requestContext);
 	}
 
-	private String renderRecommendations(Parameter params, List<ListNode> items, CMSRequestContext requestContext) {
+	private String renderRecommendations(Parameter params, List<ListNode> items, SiteRequestContext requestContext) {
 		return LifecycleExtension.RENDER_FUNCTION
 				.render(
 						(String) params.get("template"),
@@ -65,7 +65,7 @@ public class RecommendationHandler {
 						requestContext);
 	}
 
-	private List<ListNode> newest(Parameter params, CMSRequestContext requestContext) {
+	private List<ListNode> newest(Parameter params, SiteRequestContext requestContext) {
 		return LifecycleExtension.SIMPLE_RECOMMENDATION.newest(
 				(String) params.get("start"),
 				(int) params.getOrDefault("size", 5),
@@ -73,7 +73,7 @@ public class RecommendationHandler {
 
 	}
 	
-	private List<ListNode> search(Parameter params, CMSRequestContext requestContext) {
+	private List<ListNode> search(Parameter params, SiteRequestContext requestContext) {
 		return LifecycleExtension.SEARCH_RECOMMENDATION.query(
 				(String) params.get("query"),
 				(int) params.getOrDefault("size", 5),

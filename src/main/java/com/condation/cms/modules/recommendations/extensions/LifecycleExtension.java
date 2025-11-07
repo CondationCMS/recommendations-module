@@ -29,8 +29,8 @@ import com.condation.cms.api.eventbus.events.TemplateChangedEvent;
 import com.condation.cms.api.feature.features.DBFeature;
 import com.condation.cms.api.feature.features.EventBusFeature;
 import com.condation.cms.api.feature.features.SitePropertiesFeature;
-import com.condation.cms.api.module.CMSModuleContext;
-import com.condation.cms.api.module.CMSRequestContext;
+import com.condation.cms.api.module.SiteModuleContext;
+import com.condation.cms.api.module.SiteRequestContext;
 import com.condation.cms.modules.recommendations.RenderFunction;
 import com.condation.cms.modules.recommendations.SearchRecommendation;
 import com.condation.cms.modules.recommendations.SimpleRecommendation;
@@ -49,7 +49,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Extension(ModuleLifeCycleExtension.class)
-public class LifecycleExtension extends ModuleLifeCycleExtension<CMSModuleContext, CMSRequestContext> {
+public class LifecycleExtension extends ModuleLifeCycleExtension<SiteModuleContext, SiteRequestContext> {
 
 	public static SimpleRecommendation SIMPLE_RECOMMENDATION;
 	public static SearchRecommendation SEARCH_RECOMMENDATION;

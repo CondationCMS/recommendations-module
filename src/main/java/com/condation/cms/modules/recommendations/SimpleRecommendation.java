@@ -81,7 +81,7 @@ public class SimpleRecommendation {
 	private String getPath(ContentNode node, final RequestContext requestContext) {
 		final ReadOnlyFile contentBase = db.getReadOnlyFileSystem().contentBase();
 		var temp_path = contentBase.resolve(node.uri());
-		var url = PathUtil.toURI(temp_path, contentBase);
+		var url = PathUtil.toURL(temp_path, contentBase);
 
 		return HTTPUtil.modifyUrl(url, requestContext);
 	}

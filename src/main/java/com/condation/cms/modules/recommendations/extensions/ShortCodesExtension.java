@@ -26,19 +26,19 @@ package com.condation.cms.modules.recommendations.extensions;
 import java.util.Map;
 import java.util.function.Function;
 
-import com.condation.cms.api.extensions.RegisterShortCodesExtensionPoint;
+import com.condation.cms.api.extensions.RegisterTagsExtensionPoint;
 import com.condation.cms.api.feature.features.ContentNodeMapperFeature;
 import com.condation.cms.api.model.Parameter;
 import com.condation.cms.modules.recommendations.RecommendationHandler;
 import com.condation.modules.api.annotation.Extension;
 
-@Extension(RegisterShortCodesExtensionPoint.class)
-public class ShortCodesExtension extends RegisterShortCodesExtensionPoint {
+@Extension(RegisterTagsExtensionPoint.class)
+public class ShortCodesExtension extends RegisterTagsExtensionPoint {
 
 	private static RecommendationHandler handler = new RecommendationHandler();
 	
 	@Override
-	public Map<String, Function<Parameter, String>> shortCodes() {
+	public Map<String, Function<Parameter, String>> tags() {
 
 		if (getRequestContext() == null
 				|| !getRequestContext().has(ContentNodeMapperFeature.class)) {

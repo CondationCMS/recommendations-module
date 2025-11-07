@@ -24,18 +24,11 @@ package com.condation.cms.modules.recommendations;
 
 
 
-import com.condation.cms.api.feature.features.HookSystemFeature;
 import com.condation.cms.api.feature.features.IsDevModeFeature;
 import com.condation.cms.api.feature.features.TemplateEngineFeature;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
-
-import com.condation.cms.api.hooks.HookSystem;
-import com.condation.cms.api.model.Parameter;
-import com.condation.cms.api.module.CMSModuleContext;
-import com.condation.cms.api.module.CMSRequestContext;
+import com.condation.cms.api.module.SiteModuleContext;
+import com.condation.cms.api.module.SiteRequestContext;
 import com.condation.cms.api.template.TemplateEngine;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -48,11 +41,11 @@ public class RenderFunction {
 
     private final String templateExtension;
 	
-	public RenderFunction (CMSModuleContext context) {
+	public RenderFunction (SiteModuleContext context) {
 		this.templateExtension = Helpers.getTemplateFileExtension(context);
 	}
 
-    public String render (String name, Map<String, Object> data, CMSRequestContext requestContext) {
+    public String render (String name, Map<String, Object> data, SiteRequestContext requestContext) {
 
 		var templateEngine = requestContext.get(TemplateEngineFeature.class).templateEngine();
 		var devMode = requestContext.has(IsDevModeFeature.class);
